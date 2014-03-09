@@ -3,8 +3,8 @@ import java.io.IOException;
 
 public class Main {
 
-	public static void Main(String args[]) throws IOException{
-		
+	public static void main(String args[]) throws IOException{
+		//Hello WOrld
 		
 		
 		final String location[] = new String[4];
