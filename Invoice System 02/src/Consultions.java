@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-//Hey
+ // Hey
 
 public class Consultions{
 

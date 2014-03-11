@@ -42,6 +42,7 @@ public class People implements Cloneable{
 	protected String getEmailAddress(){
 		return emailAddress.toString();
 	}
+
 	
 	@Override 
 	public String toString(){
