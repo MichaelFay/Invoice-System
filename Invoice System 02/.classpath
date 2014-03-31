@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry exported="true" kind="lib" path="/Users/Michael/Desktop/xstream-distribution-1.4.7-src.zip"/>
-	<classpathentry kind="lib" path="/Users/Michael/Desktop/joda-time-2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/Michael/Desktop/Programming/External Jar/joda-time-2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/Michael/Desktop/Programming/External Jar/xstream-distribution-1.4.7-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

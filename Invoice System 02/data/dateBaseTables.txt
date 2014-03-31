@@ -1,0 +1,39 @@
+<Consumer>
+	VarChar>
+		Customer Code
+		Primary Contact Code
+		First name
+		Last name
+		Street
+		City
+		State
+		Zip
+		Country
+	</VarChar>
+
+	<Boolean>
+		Is Government Employee (isGov)
+	</Boolean>
+
+	<People>
+		Primary Contact
+	</People>
+<Consumer>
+
+<Products>
+	<VarChar>
+		Code
+		Name
+		Type
+		Service Fee’s — Can be null
+		Price-Per-Unit — Can be null		
+	</VarChar>
+
+	<Integer>
+		Amount
+	</>
+
+</Products>
+
+
+	
