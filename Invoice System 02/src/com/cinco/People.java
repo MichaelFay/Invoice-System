@@ -1,3 +1,4 @@
+package com.cinco;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class People implements Cloneable{
 		this.zip = address[3];
 		this.country = address[4];
 		
-		sql.addPerson(this.personCode, subname[1].trim(), subname[0].trim(), this.street, this.city, this.state, this.zip, this.country);
+		//sql.addPerson(this.personCode, subname[1].trim(), subname[0].trim(), this.street, this.city, this.state, this.zip, this.country);
 		
 		
 //		String personCode, String firstName,
@@ -37,7 +38,7 @@ public class People implements Cloneable{
 			String emailTemp[] = temp[3].split(",");
 			for(int i = 0; i<emailTemp.length; i++){
 				emailAddress.add(emailTemp[i]);
-				sql.addEmail(this.personCode, emailAddress.get(i));
+				//sql.addEmail(this.personCode, emailAddress.get(i));
 				
 				
 			}

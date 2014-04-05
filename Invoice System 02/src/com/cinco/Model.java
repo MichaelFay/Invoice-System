@@ -1,3 +1,4 @@
+package com.cinco;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -86,24 +87,10 @@ public class Model {
 
 	private ArrayList<String> getFile(String location) throws IOException{
 
-			ArrayList<String> file = new ArrayList<String>();
-
-			BufferedReader br = new BufferedReader(new FileReader(location));
-
-			String line = null;
-			int lineNumber = 0;
-
-			while((line = br.readLine()) != null){
-				line.trim();
-
-				if(lineNumber != 0 && line.compareTo(" ") !=0)
-					file.add(line);
-
-				lineNumber++;
-			}
+			
 
 
-			return file;
+			return null;
 		}
 
 
@@ -155,6 +142,35 @@ public class Model {
 		sql.removeAllInvoices();
 		sql.removeAllInvoiceProducts();
 		sql.removeAllEmails();
+	}
+	
+	private void fileToSQL(String location){
+		ArrayList<String> file = new ArrayList<String>();
+
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(location));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String line = null;
+		int lineNumber = 0;
+
+		try {
+			while((line = br.readLine()) != null){
+				line.trim();
+
+				if(lineNumber != 0 && line.compareTo(" ") !=0)
+					file.add(line);
+
+				lineNumber++;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

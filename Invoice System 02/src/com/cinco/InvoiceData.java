@@ -1,3 +1,4 @@
+package com.cinco;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,6 +23,8 @@ public class InvoiceData {
 
 	public InvoiceData() {
 
+		
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (InstantiationException e) {
@@ -49,7 +52,9 @@ public class InvoiceData {
 	}
 
 	public static void removeAllEmails(){
+		
 		try {
+			
 
 			sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
