@@ -28,8 +28,6 @@ public class Controller {
 		
 		
 		
-		sql.conn.close();
-		
 		
 	}
 	

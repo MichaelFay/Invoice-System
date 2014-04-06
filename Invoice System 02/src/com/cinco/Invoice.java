@@ -1,14 +1,9 @@
 package com.cinco;
 
 import org.joda.time.*;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 
@@ -18,7 +13,6 @@ public class Invoice {
 	private String invoiceCode, customerCode, salesPersonCode;
 	private People salesPerson;
 	private Consumer consumer;
-	private InvoiceProductData product;
 	
 	private ArrayList<String> productTemp;
 	private HashMap<Products, String> products;
@@ -120,8 +114,7 @@ public class Invoice {
 
 	@Override
 	public String toString(){
-		
-		Double fee, total; 
+
 		
 		System.out.println("Invoice " + this.invoiceCode);
 		System.out.println("==============");

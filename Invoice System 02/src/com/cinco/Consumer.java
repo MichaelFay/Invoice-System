@@ -1,13 +1,13 @@
 package com.cinco;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 
 
 public class Consumer {
 
-	private String customerCode, primaryContactCode, name, street, city, state, zip, country;
+	@SuppressWarnings("unused")
+	private String customerCode, primaryContactCode, name, street, state, city, zip, country;
 	private boolean isGov;
 	private People primaryContact;
 	
@@ -24,15 +24,12 @@ public class Consumer {
 		this.customerCode = temp[0];
 
 		
-		String temps = "D";
 		
 		if(temp[1].compareTo("G")==0){
 			this.isGov = true;
-			temps = "G";
 		}
 		else{
 			this.isGov = false;
-			temps = "C";
 		}
 
 
@@ -44,21 +41,7 @@ public class Consumer {
 		this.state = address[2];
 		this.zip = address[3];
 		this.country = address[4];
-		
-//		
-//		String customerCode, String type,
-//		String primaryContactPersonCode, String name, String street,
-//		String city, String state, String zip, String country
 
-		
-		sql.addCustomer(this.customerCode, temps, this.primaryContactCode, this.name, this.street, this.city, this.state, this.zip, this.country);
-		
-		try {
-			sql.conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	protected String getCustomerCode(){

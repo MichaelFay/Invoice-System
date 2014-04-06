@@ -2,7 +2,6 @@ package com.cinco;
 
 import java.util.ArrayList;
 
- // Hey
 
 public class Consultions{
 

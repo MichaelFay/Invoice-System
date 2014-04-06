@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class Main {
 
 	public static void main(String args[]) throws IOException, SQLException{
-		//Hello WOrld
+		
 		
 		
 		final String location[] = new String[4];
@@ -18,12 +18,6 @@ public class Main {
 		final Controller control = new Controller(location);
 		
 		control.Start();
-		try {
-			InvoiceData.conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		//System.out.println("End of Program");
 	}

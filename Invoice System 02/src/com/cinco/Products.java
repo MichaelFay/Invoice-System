@@ -9,8 +9,6 @@ public class Products {
 	private Equipment equip;
 	private Consultions consult;
 	private License lic;
-	
-	private InvoiceData sql = new InvoiceData();
 
 	public Products(String input){
 		 input.trim();
@@ -29,45 +27,21 @@ public class Products {
 		 this.type = 'E';
 		 this.name = input[2];
 		 this.equip = new Equipment(input[3]); 
-		 
-//		 sql.addEquipment(this.code, this.name, this.equip.getPricePerUnit());
-//		 
-//		 try {
-//			sql.conn.close();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 	 }
 	private void setConsultions(String input[]){
 		 this.code = input[0];
 		 this.type = 'C';
 		 this.name = input[2];
 		 this.consult = new Consultions(input[3], input[4]);
-		 
-//		 sql.addConsultation(this.code, this.name, this.consult.getConsultPersonCode(), this.consult.getHourlyFee());
-//		 
-//		 try {
-//				sql.conn.close();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
 	}
 	private void setLicense(String input[]){
 		this.code = input[0];
 		this.type = 'L';
 		this.name = input[2];
 		this.lic = new License(input[3], input[4]);
-		
-//		sql.addLicense(this.code, this.name, this.lic.getServiceFee(), this.lic.getAnnualFee());
-//		
-//		 try {
-//				sql.conn.close();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
 		
 	}
 

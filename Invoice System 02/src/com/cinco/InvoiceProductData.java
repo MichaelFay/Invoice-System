@@ -6,8 +6,6 @@ public class InvoiceProductData {
 	private Double fees, price, complianceFee, totalCharge;
 	private Integer amount;
 	
-	private People person;
-	
 	public InvoiceProductData(String startDate, String endDate, Integer amount, Products product){
 		this.startDate = startDate;
 		this.endDate = endDate;

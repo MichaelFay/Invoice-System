@@ -1,11 +1,12 @@
 package com.cinco;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.management.Query;
+
 
 /**
  * This is a collection of utility methods that define a general API for
@@ -14,49 +15,14 @@ import javax.management.Query;
  */
 public class InvoiceData {
 
-	public static Connection conn;
-	private static PreparedStatement ps;
-	private static Query q;
-	private static String sql;
-	private static ResultSet rs;
-	private static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
 
-	public InvoiceData() {
 
-		
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		} catch (InstantiationException e) {
-			System.out.println("InstantiationException: ");
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			System.out.println("IllegalAccessException: ");
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (ClassNotFoundException e) {
-			System.out.println("ClassNotFoundException: ");
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+	public static void removeAllEmails() {
 
 		try {
-			conn = DriverManager.getConnection(DatabaseInfo.url,
-					DatabaseInfo.username, DatabaseInfo.password);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			Connection conn = getConn();
 
-	}
-
-	public static void removeAllEmails(){
-		
-		try {
-			
-
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -71,24 +37,22 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
-			
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-	}
-	
-	public static void removeAllInvoiceProducts(){
-		try {
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+	}
+
+	public static void removeAllInvoiceProducts() {
+		try {
+			Connection conn = getConn();
+
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -103,27 +67,25 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
-			
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * Method that removes every person record from the database
 	 */
 	public static void removeAllPersons() {
 
 		try {
+			Connection conn = getConn();
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -138,11 +100,9 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
-			
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -160,8 +120,9 @@ public class InvoiceData {
 	public void removePerson(String personCode) {
 
 		try {
+			Connection conn = getConn();
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -179,10 +140,9 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -219,10 +179,12 @@ public class InvoiceData {
 		// St.','Lincoln','Nebraksa','68508','USA');
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO Persons (`FirstName`, `LastName`, `PersonCode`, `Street`, `City`, `State`, `ZipCode`, `Country`)"
+			String sql = "INSERT INTO Persons (`FirstName`, `LastName`, `PersonCode`, `Street`, `City`, `State`, `ZipCode`, `Country`)"
 					+ "VALUES (?,?,?,?,?,?,?,?)";
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, firstName);
 			ps.setString(2, lastName);
 			ps.setString(3, personCode);
@@ -235,10 +197,9 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Persons", "LastName");
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -261,11 +222,13 @@ public class InvoiceData {
 			return;
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO Emails (`PersonID`, `Email`) "
+			String sql = "INSERT INTO Emails (`PersonID`, `Email`) "
 					+ "VALUE ((SELECT PersonID FROM Persons WHERE PersonCode = ?), ?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, personCode);
 			ps.setString(2, email);
@@ -273,7 +236,7 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Emails", "EmailID");
-			
+
 			ps.close();
 			conn.close();
 
@@ -290,8 +253,10 @@ public class InvoiceData {
 	public static void removeAllCustomers() {
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -306,7 +271,7 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
 
@@ -328,10 +293,12 @@ public class InvoiceData {
 			return;
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO Customers (`CustomerCode`, `PrimaryContactCode`, `CompanyName`, `Street`, `City`, `State`, `ZipCode`, `Country`, `IsGov`)"
+			String sql = "INSERT INTO Customers (`CustomerCode`, `PrimaryContactCode`, `CompanyName`, `Street`, `City`, `State`, `ZipCode`, `Country`, `IsGov`)"
 					+ "VALUES (?,?,?,?,?,?,?,?,?)";
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, customerCode);
 			ps.setString(2, primaryContactPersonCode);
@@ -346,7 +313,7 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Customers", "CompanyName");
-			
+
 			ps.close();
 			conn.close();
 
@@ -362,8 +329,9 @@ public class InvoiceData {
 	 */
 	public static void removeAllProducts() {
 		try {
+			Connection conn = getConn();
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -378,11 +346,9 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
-			
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -399,8 +365,9 @@ public class InvoiceData {
 	public static void removeProduct(String productCode) {
 
 		try {
+			Connection conn = getConn();
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -418,7 +385,7 @@ public class InvoiceData {
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
 
@@ -435,18 +402,19 @@ public class InvoiceData {
 	public static void addEquipment(String productCode, String name,
 			Double pricePerUnit) {
 
-
 		if (checkUniqueness(productCode, "Products", "ProductCode") == false
 				|| productCode == null || name == null || pricePerUnit == null
 				|| pricePerUnit < 0)
 			return;
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ProductType`, `ServiceFee`, `PricePerUnit`) "
+			String sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ProductType`, `ServiceFee`, `PricePerUnit`) "
 					+ "VALUES (?,?,?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, productCode);
 			ps.setString(2, name);
@@ -457,7 +425,7 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Products", "ProductName");
-			
+
 			ps.close();
 			conn.close();
 
@@ -479,11 +447,13 @@ public class InvoiceData {
 			return;
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ProductType`, `ServiceFee`, `PricePerUnit`) "
+			String sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ProductType`, `ServiceFee`, `PricePerUnit`) "
 					+ "VALUES (?,?,?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, productCode);
 			ps.setString(2, name);
@@ -494,10 +464,9 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Products", "ProductName");
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -518,11 +487,13 @@ public class InvoiceData {
 			return;
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ConsultantPersonCode`,`ProductType`, `ServiceFee`, `PricePerUnit`) "
+			String sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ConsultantPersonCode`,`ProductType`, `ServiceFee`, `PricePerUnit`) "
 					+ "VALUES (?,?,?,?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, productCode);
 			ps.setString(2, name);
@@ -534,10 +505,9 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Products", "ProductName");
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -550,10 +520,12 @@ public class InvoiceData {
 	 * Removes all invoice records from the database
 	 */
 	public static void removeAllInvoices() {
+		
+		Connection conn = getConn();
 
 		try {
 
-			sql = "SET SQL_SAFE_UPDATES = 0";
+			String sql = "SET SQL_SAFE_UPDATES = 0";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -566,16 +538,15 @@ public class InvoiceData {
 			ps.execute();
 
 			sql = "DELETE FROM InvoiceProducts";
-			PreparedStatement pss = conn.prepareStatement(sql);
-			pss.execute();
+			ps = conn.prepareStatement(sql);
+			ps.execute();
 
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -593,6 +564,7 @@ public class InvoiceData {
 	public static void removeInvoice(String invoiceCode) {
 
 		int ID = 0;
+		Connection conn = getConn();
 
 		try {
 
@@ -607,7 +579,7 @@ public class InvoiceData {
 				ID = rs.getInt("InvoiceID");
 			}
 
-			sql = "DELETE FROM InvoiceProducts WHERE InvoiceID = ?";
+			String sql = "DELETE FROM InvoiceProducts WHERE InvoiceID = ?";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, ID);
 			ps.execute();
@@ -616,7 +588,7 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, invoiceCode);
 			ps.execute();
-			
+
 			ps.close();
 			rs.close();
 			conn.close();
@@ -633,6 +605,7 @@ public class InvoiceData {
 	 */
 	public static void addInvoice(String invoiceCode, String customerCode,
 			String salesPersonCode) {
+		
 
 		// INSERT INTO Invoice (`InvoiceCode`,`CustomerCode`,`SalesPersonCode`)
 		// VALUES ('C001','2345','1278');
@@ -641,13 +614,15 @@ public class InvoiceData {
 				|| invoiceCode == null || customerCode == null
 				|| salesPersonCode == null)
 			return;
+		
+		Connection conn = getConn();
 
 		try {
 
-			sql = "INSERT INTO Invoice (`InvoiceCode`,`CustomerCode`,`SalesPersonCode`) "
+			String sql = "INSERT INTO Invoice (`InvoiceCode`,`CustomerCode`,`SalesPersonCode`) "
 					+ "VALUES (?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, invoiceCode);
 			ps.setString(2, customerCode);
@@ -656,7 +631,7 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("Invoice", "InvoiceCode");
-			
+
 			ps.close();
 			conn.close();
 
@@ -674,16 +649,19 @@ public class InvoiceData {
 	 */
 	public static void addEquipmentToInvoice(String invoiceCode,
 			String productCode, int numUnits) {
+	
 
 		if (invoiceCode == null || productCode == null || numUnits < 0)
 			return;
 
 		try {
+			
+			Connection conn = getConn();
 
-			sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
+			String sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
 					+ "VALUES ((SELECT InvoiceID FROM Invoice WHERE InvoiceCode = ?),?,?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, invoiceCode);
 			ps.setString(2, "0");
@@ -694,10 +672,9 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("InvoiceProducts", "InvoiceID");
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -713,6 +690,7 @@ public class InvoiceData {
 	 */
 	public static void addLicenseToInvoice(String invoiceCode,
 			String productCode, String startDate, String endDate) {
+		
 
 		if (invoiceCode == null || productCode == null || startDate == null
 				|| endDate == null)
@@ -720,10 +698,12 @@ public class InvoiceData {
 
 		try {
 
-			sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
+			Connection conn = getConn();
+			
+			String sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
 					+ "VALUES ((SELECT InvoiceID FROM Invoice WHERE InvoiceCode = ?),?,?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, invoiceCode);
 			ps.setString(2, startDate);
@@ -734,10 +714,9 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("InvoiceProducts", "InvoiceID");
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -753,18 +732,18 @@ public class InvoiceData {
 	 */
 	public static void addConsultationToInvoice(String invoiceCode,
 			String productCode, double numHours) {
+		
 
 		if (invoiceCode == null || productCode == null || numHours < 0)
 			return;
 
 		try {
-
-
-
-			sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
+			Connection conn = getConn();
+			
+			String sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
 					+ "VALUES ((SELECT InvoiceID FROM Invoice WHERE InvoiceCode = ?),?,?,?,?)";
 
-			ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, invoiceCode);
 			ps.setString(2, "0");
@@ -775,10 +754,9 @@ public class InvoiceData {
 			ps.executeUpdate();
 
 			getRequested("InvoiceProducts", "InvoiceID");
-			
+
 			ps.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -789,6 +767,7 @@ public class InvoiceData {
 
 	private static void getRequested(String table, String col) {
 
+		Connection conn = getConn();
 		try {
 
 			conn = DriverManager.getConnection(DatabaseInfo.url,
@@ -803,11 +782,10 @@ public class InvoiceData {
 			while (rs.next()) {
 				System.out.println(rs.getString(col));
 			}
-			
+
 			ps.close();
 			rs.close();
 			conn.close();
-			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -818,11 +796,10 @@ public class InvoiceData {
 
 	private static boolean checkUniqueness(String ident, String table,
 			String col) {
+		
+		Connection conn = getConn();
 
 		try {
-
-			conn = DriverManager.getConnection(DatabaseInfo.url,
-					DatabaseInfo.username, DatabaseInfo.password);
 
 			String Query = "Select * FROM " + table.trim();
 			PreparedStatement ps = conn.prepareStatement(Query);
@@ -834,7 +811,7 @@ public class InvoiceData {
 				if (rs.getString(col).toString().compareTo(ident) == 0)
 					return false;
 			}
-			
+
 			ps.close();
 			rs.close();
 			conn.close();
@@ -845,5 +822,36 @@ public class InvoiceData {
 		}
 
 		return true;
+	}
+	
+	private static Connection getConn(){
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		} catch (InstantiationException e) {
+			System.out.println("InstantiationException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			System.out.println("IllegalAccessException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		
+		Connection conn = null;
+
+		try {
+			conn = DriverManager.getConnection(DatabaseInfo.url, DatabaseInfo.username, DatabaseInfo.password);
+		} catch (SQLException e) {
+			System.out.println("SQLException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		
+		return conn;
 	}
 }
