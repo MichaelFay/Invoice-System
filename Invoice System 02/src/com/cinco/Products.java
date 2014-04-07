@@ -13,6 +13,7 @@ public class Products {
 	public Products(String input){
 		 input.trim();
 		 String temp[] = input.split(";");
+		 
 		 if(temp[1].compareTo("E")==0)
 			 setEquipment(temp);
 		 else if(temp[1].compareTo("C")==0)

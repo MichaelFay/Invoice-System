@@ -308,7 +308,7 @@ public class InvoiceData {
 			ps.setString(6, state);
 			ps.setString(7, zip);
 			ps.setString(8, country);
-			ps.setBoolean(9, Boolean.parseBoolean(type));
+			ps.setString(9, type);
 
 			ps.executeUpdate();
 

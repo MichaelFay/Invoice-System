@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -76,6 +81,7 @@ public class Model {
 			try {
 				invoice.setInvoiceData(peopleData, consumerData, productData);
 			} catch (ParseException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -86,20 +92,35 @@ public class Model {
 
 	private ArrayList<String> getFile(String location) throws IOException {
 
-		return null;
+		if (location.compareTo("data/Persons.dat") == 0)
+			return getPersonSQL();
+		else if (location.compareTo("data/Customers.dat") == 0)
+			return getConsumerSQL();
+		else if (location.compareTo("data/Products.dat") == 0)
+			return getProductsSQL();
+		else if (location.compareTo("data/Invoices.dat") == 0)
+			return getInvoiceSQL();
+		
+		else 
+			return null;
+
 	}
 
 	protected void printInvoice() {
+		
+		
+		System.out.println(invoiceData.size());
 		for (Invoice i : invoiceData) {
 			i.printInvoice();
 			System.out.println();
 			System.out.println();
 		}
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+
 		Double total = 0.0, subTotal = 0.0, fees = 0.0, taxes = 0.0;
 
 		System.out.println(String
@@ -128,16 +149,6 @@ public class Model {
 				"%-92s $%-15.2f $%-15.2f $%-15.2f  $%-15.2f", "Totals",
 				subTotal, fees, taxes, total));
 
-	}
-
-	@SuppressWarnings("static-access")
-	protected void prepSQL() {
-		sql.removeAllCustomers();
-		sql.removeAllPersons();
-		sql.removeAllProducts();
-		sql.removeAllInvoices();
-		sql.removeAllInvoiceProducts();
-		sql.removeAllEmails();
 	}
 
 	protected void fileToSQL(String location) {
@@ -169,22 +180,274 @@ public class Model {
 		}
 	}
 
-	
-	protected void getPersonSQL() {
+	private ArrayList<String> getPersonSQL() {
+
+		ArrayList<String> file = new ArrayList<String>();
+
+		Connection conn = getConn();
+
+		try {
+			String sql = "SELECT * FROM Persons";
+			ResultSet rs = null;
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery(sql);
+
+			while (rs.next()) {
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.append(rs.getString("PersonCode") + ";");
+				sb.append(rs.getString("LastName") + ", ");
+				sb.append(rs.getString("FirstName") + ";");
+				sb.append(rs.getString("Street") + ",");
+				sb.append(rs.getString("City") + ",");
+				sb.append(rs.getString("State") + ",");
+				sb.append(rs.getString("ZipCode") + ",");
+				sb.append(rs.getString("Country") + ";");
+
+				ResultSet emails = null;
+
+				sql = "SELECT FirstName, PersonCode, Email FROM Emails JOIN Persons ON Emails.PersonID =  Persons.PersonID WHERE Persons.PersonCode = ?";
+
+				ps = conn.prepareStatement(sql);
+
+				ps.setString(1, rs.getString("PersonCode"));
+
+				emails = ps.executeQuery();
+				while (emails.next()) {
+					sb.append(emails.getString("Email") + ",");
+
+				}
+
+				emails.close();
+
+				file.add(sb.toString());
+
+			}
+
+			rs.close();
+			ps.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return file;
+	}
+
+	private ArrayList<String> getConsumerSQL() {
+
+		ArrayList<String> file = new ArrayList<String>();
+
+		Connection conn = getConn();
+
+		try {
+			String sql = "SELECT * FROM Customers";
+			ResultSet rs = null;
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery(sql);
+
+			// C002;C;944c;Stark Industries;184 Marvel Way,New York,NY,10453,USA
+
+			while (rs.next()) {
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.append(rs.getString("CustomerCode") + ";");
+				sb.append(rs.getString("IsGov") + ";");
+				sb.append(rs.getString("PrimaryContactCode") + ";");
+				sb.append(rs.getString("CompanyName") + ";");
+				sb.append(rs.getString("Street") + ",");
+				sb.append(rs.getString("City") + ",");
+				sb.append(rs.getString("State") + ",");
+				sb.append(rs.getString("ZipCode") + ",");
+				sb.append(rs.getString("Country"));
+
+				file.add(sb.toString());
+			}
+			
+			rs.close();
+			ps.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return file;
+	}
+
+	private ArrayList<String> getProductsSQL() {
+		ArrayList<String> file = new ArrayList<String>();
+
+		Connection conn = getConn();
+
+		try {
+			String sql = "SELECT * FROM Products";
+			ResultSet rs = null;
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery(sql);
+
+			while (rs.next()) {
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.append(rs.getString("ProductCode") + ";");
+
+				if (rs.getString("ServiceFee").compareToIgnoreCase("0") == 0) {
+
+					sb.append("E;");
+					sb.append(rs.getString("ProductName") + ";");
+					sb.append(rs.getString("PricePerUnit"));
+
+				} else if (rs.getString("PricePerUnit")
+						.compareToIgnoreCase("0") == 0) {
+					sb.append("C;");
+					sb.append(rs.getString("ProductName") + ";");
+					sb.append(rs.getString("ConsultantPersonCode")+ ";");
+					sb.append(rs.getString("ServiceFee"));
+
+				} else if (rs.getString("ServiceFee").compareToIgnoreCase("0") != 0
+						&& rs.getString("PricePerUnit")
+								.compareToIgnoreCase("0") != 0) {
+
+					sb.append("L;");
+					sb.append(rs.getString("ProductName") + ";");
+					sb.append(rs.getString("ServiceFee") + ";");
+					sb.append(rs.getString("PricePerUnit"));
+
+				} else
+					sb.append("");
+
+				file.add(sb.toString());
+			}
+			
+			rs.close();
+			ps.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return file;
+
+	}
+
+	private ArrayList<String> getInvoiceSQL() {
+
+		ArrayList<String> file = new ArrayList<String>();
+
+		Connection conn = getConn();
+
+		try {
+			String sql = "SELECT * FROM Invoice";
+			ResultSet rs = null;
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery(sql);
+
+			while (rs.next()) {
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.append(rs.getString("InvoiceCode") + ";");
+				sb.append(rs.getString("CustomerCode") + ";");
+				sb.append(rs.getString("SalesPersonCode") + ";");
+
+
+				ResultSet products = null;
+
+				sql = "SELECT StartDate, EndDate, ProductCode, ProductCount FROM InvoiceProducts JOIN Invoice ON Invoice.InvoiceID = InvoiceProducts.InvoiceID WHERE InvoiceCode = ?;";
+
+				ps = conn.prepareStatement(sql);
+
+				ps.setString(1, rs.getString("InvoiceCode"));
+
+				products = ps.executeQuery();
+
+				while (products.next()) {
+
+					if (products.getString("StartDate").compareToIgnoreCase("0") != 0
+							&& products.getString("StartDate").compareToIgnoreCase(
+									"0") != 0) {
+
+						sb.append(products.getString("ProductCode") + ":");
+						sb.append(products.getString("StartDate") + ":");
+						sb.append(products.getString("EndDate") + ",");
+
+					}
+					else if (products.getString("StartDate").compareToIgnoreCase("0") == 0 && products.getString("StartDate").compareToIgnoreCase("0") == 0){
+						
+						sb.append(products.getString("ProductCode") + ":");
+						sb.append(products.getString("ProductCount") + ",");
+						
+					}
+				
+
+				}
+
+				products.close();
+				sb.replace(sb.length()-1, sb.length(), "");
+				
+				file.add(sb.toString());
+				
+				
+				System.out.println(sb.toString());
+
+			}
+			
+			rs.close();
+			ps.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		
 		
-		
-	}
-
-	protected void getConsumerSQL() {
+		return file;
 
 	}
 
-	protected void getProductsSQL() {
+	private static Connection getConn() {
 
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		} catch (InstantiationException e) {
+			System.out.println("InstantiationException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			System.out.println("IllegalAccessException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		Connection conn = null;
+
+		try {
+			conn = DriverManager.getConnection(DatabaseInfo.url,
+					DatabaseInfo.username, DatabaseInfo.password);
+		} catch (SQLException e) {
+			System.out.println("SQLException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		return conn;
 	}
 
-	protected void getInvoice() {
-
-	}
 }

@@ -114,6 +114,8 @@ public class Invoice {
 
 	@Override
 	public String toString(){
+		
+		
 
 		
 		System.out.println("Invoice " + this.invoiceCode);
