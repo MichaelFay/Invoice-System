@@ -10,6 +10,8 @@ public class People implements Cloneable{
 	@SuppressWarnings("unused")
 	private String personCode, name, street, city, zip, state, country;
 	
+	private String nullFix[] = {"na", "Non-Found","","","","", ""};
+	
 	
 	private ArrayList<String> emailAddress = new ArrayList<String>();
 
@@ -33,15 +35,23 @@ public class People implements Cloneable{
 			String emailTemp[] = temp[3].split(",");
 			for(int i = 0; i<emailTemp.length; i++){
 				emailAddress.add(emailTemp[i]);
-				
-				
 			}
 			
 
 		}
 
 	}
-
+	protected People(Boolean b){
+		this.personCode = nullFix[0];
+		this.name = nullFix[1];
+		this.street=nullFix[2];
+		this.city = nullFix[3];
+		this.state = nullFix[4];
+		this.zip = nullFix[5];
+		this.country = nullFix[6];
+	}
+	
+	
 	protected String getPersonCode(){
 		return this.personCode;
 	}

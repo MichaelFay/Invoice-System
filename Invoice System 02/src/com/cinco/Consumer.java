@@ -63,6 +63,10 @@ public class Consumer {
 			return "C";
 	}
 
+	protected void setPrimaryContact(People code){
+		this.primaryContact = code;
+		
+	}
 	protected void setPrimaryContact(ArrayList<People> input){
 		for(int i = 0; i < input.size(); i++){
 			if(this.primaryContactCode.compareTo(input.get(i).getPersonCode())==0){

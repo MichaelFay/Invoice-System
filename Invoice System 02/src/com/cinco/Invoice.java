@@ -115,7 +115,10 @@ public class Invoice {
 	@Override
 	public String toString(){
 		
-		
+		if(consumer.getPrimaryContact() == null){
+			People temp = new People(true);
+			consumer.setPrimaryContact(temp);
+		}
 
 		
 		System.out.println("Invoice " + this.invoiceCode);

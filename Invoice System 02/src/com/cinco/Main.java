@@ -19,6 +19,6 @@ public class Main {
 		
 		control.Start();
 		
-		System.out.println("\n\n\n\n\nEnd of Program");
+		//System.out.println("\n\n\n\n\n End of Program");
 	}
 }

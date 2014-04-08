@@ -178,6 +178,25 @@ public class Model {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		for(int i = 0; i < file.size(); i++){
+			if (location.compareTo("data/Persons.dat") == 0){
+				
+			}
+			else if (location.compareTo("data/Customers.dat") == 0){
+				
+			}
+				
+			else if (location.compareTo("data/Products.dat") == 0){
+				
+			}
+				
+			else if (location.compareTo("data/Invoices.dat") == 0){
+				
+			}
+				
+		}
+		
 	}
 
 	private ArrayList<String> getPersonSQL() {

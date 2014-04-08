@@ -173,10 +173,6 @@ public class InvoiceData {
 				|| zip == null || country == null)
 			return;
 
-		// INSERT INTO Persons (`FirstName`, `LastName`, `PersonCode`, `Street`,
-		// `City`, `State`, `ZipCode`, `Country`)
-		// VALUES ('Michael','Marsh','3456','326 17th
-		// St.','Lincoln','Nebraksa','68508','USA');
 
 		try {
 			
@@ -589,8 +585,8 @@ public class InvoiceData {
 			ps.setString(1, invoiceCode);
 			ps.execute();
 
+			rs.clearWarnings();
 			ps.close();
-			rs.close();
 			conn.close();
 
 		} catch (SQLException e) {
@@ -783,8 +779,8 @@ public class InvoiceData {
 				System.out.println(rs.getString(col));
 			}
 
-			ps.close();
 			rs.close();
+			ps.close();
 			conn.close();
 
 		} catch (SQLException e) {
@@ -812,8 +808,8 @@ public class InvoiceData {
 					return false;
 			}
 
-			ps.close();
 			rs.close();
+			ps.close();
 			conn.close();
 
 		} catch (SQLException e) {
