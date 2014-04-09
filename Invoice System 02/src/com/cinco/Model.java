@@ -25,28 +25,19 @@ public class Model {
 	private ArrayList<Products> productData;
 	private ArrayList<Invoice> invoiceData;
 
-	protected Model() {
-
-	}
-
 	protected void setPeopleData(String location) throws IOException {
 		peopleData = new ArrayList<People>();
-
 		ArrayList<String> temp = getFile(location);
-
 		for (int i = 0; i < temp.size(); i++) {
 			people = new People(temp.get(i));
 			peopleData.add(people);
 			// System.out.println(people.toString());
 		}
-
 	}
 
 	protected void setConsumerData(String location) throws IOException {
 		consumerData = new ArrayList<Consumer>();
-
 		ArrayList<String> temp = getFile(location);
-
 		for (int i = 0; i < temp.size(); i++) {
 			temp.get(i).trim();
 			consumer = new Consumer(temp.get(i));
@@ -54,13 +45,11 @@ public class Model {
 			consumerData.add(consumer);
 			// System.out.println(consumer.toString());
 		}
-
 	}
 
 	protected void setProductData(String location) throws IOException {
 		productData = new ArrayList<Products>();
 		ArrayList<String> temp = getFile(location);
-
 		for (int i = 0; i < temp.size(); i++) {
 			temp.get(i).trim();
 			product = new Products(temp.get(i));
@@ -200,20 +189,14 @@ public class Model {
 	}
 
 	private ArrayList<String> getPersonSQL() {
-
 		ArrayList<String> file = new ArrayList<String>();
-
 		Connection conn = getConn();
-
 		try {
 			String sql = "SELECT * FROM Persons";
 			ResultSet rs = null;
 			PreparedStatement ps = conn.prepareStatement(sql);
-
 			rs = ps.executeQuery(sql);
-
 			while (rs.next()) {
-
 				StringBuilder sb = new StringBuilder();
 
 				sb.append(rs.getString("PersonCode") + ";");
@@ -238,16 +221,10 @@ public class Model {
 					sb.append(emails.getString("Email") + ",");
 
 				}
-
-				emails.close();
-
+				InvoiceData.closeConnections(null, null, emails);
 				file.add(sb.toString());
-
 			}
-
-			rs.close();
-			ps.close();
-			conn.close();
+			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -289,9 +266,7 @@ public class Model {
 				file.add(sb.toString());
 			}
 			
-			rs.close();
-			ps.close();
-			conn.close();
+			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -347,9 +322,7 @@ public class Model {
 				file.add(sb.toString());
 			}
 			
-			rs.close();
-			ps.close();
-			conn.close();
+			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -419,13 +392,11 @@ public class Model {
 				file.add(sb.toString());
 				
 				
-				System.out.println(sb.toString());
+//				System.out.println(sb.toString());
 
 			}
 			
-			rs.close();
-			ps.close();
-			conn.close();
+			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
 			e.printStackTrace();

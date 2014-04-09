@@ -6,16 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-
 /**
  * This is a collection of utility methods that define a general API for
  * interacting with the database supporting this application.
  * 
  */
 public class InvoiceData {
-
-
 
 	public static void removeAllEmails() {
 
@@ -68,8 +64,11 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			sql = "SET SQL_SAFE_UPDATES = 1";
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -93,6 +92,10 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
+			sql = "DELETE FROM Emails";
+			ps = conn.prepareStatement(sql);
+			ps.execute();
+
 			sql = "DELETE FROM Persons";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
@@ -101,8 +104,7 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -130,19 +132,23 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
+			sql = "DELETE FROM Email where PersonID = (SELECT PersonID FROM Person WHERE PersonCode =?)";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, personCode);
+			ps.execute();
+
 			sql = "DELETE FROM Persons where PersonCode = ?";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, personCode);
 			ps.execute();
 
-			getRequested("Persons", "FirstName");
+			// getRequested("Persons", "FirstName");
 
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -173,9 +179,8 @@ public class InvoiceData {
 				|| zip == null || country == null)
 			return;
 
-
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO Persons (`FirstName`, `LastName`, `PersonCode`, `Street`, `City`, `State`, `ZipCode`, `Country`)"
@@ -192,10 +197,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Persons", "LastName");
+			// getRequested("Persons", "LastName");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -218,7 +222,7 @@ public class InvoiceData {
 			return;
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO Emails (`PersonID`, `Email`) "
@@ -231,10 +235,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Emails", "EmailID");
+			// getRequested("Emails", "EmailID");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -249,7 +252,7 @@ public class InvoiceData {
 	public static void removeAllCustomers() {
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "SET SQL_SAFE_UPDATES = 0";
@@ -268,8 +271,7 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -289,7 +291,7 @@ public class InvoiceData {
 			return;
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO Customers (`CustomerCode`, `PrimaryContactCode`, `CompanyName`, `Street`, `City`, `State`, `ZipCode`, `Country`, `IsGov`)"
@@ -308,10 +310,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Customers", "CompanyName");
+//			getRequested("Customers", "CompanyName");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -319,6 +320,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Removes all product records from the database
@@ -343,14 +345,14 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 
 	/**
 	 * Removes a particular product record from the database corresponding to
@@ -376,14 +378,13 @@ public class InvoiceData {
 			ps.setString(1, productCode);
 			ps.execute();
 
-			getRequested("Products", "ProductName");
+//			getRequested("Products", "ProductName");
 
 			sql = "SET FOREIGN_KEY_CHECKS=1";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -391,6 +392,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Adds an equipment record to the database with the provided data.
@@ -404,7 +406,7 @@ public class InvoiceData {
 			return;
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ProductType`, `ServiceFee`, `PricePerUnit`) "
@@ -420,10 +422,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Products", "ProductName");
+//			getRequested("Products", "ProductName");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -431,6 +432,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Adds an license record to the database with the provided data.
@@ -443,7 +445,7 @@ public class InvoiceData {
 			return;
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ProductType`, `ServiceFee`, `PricePerUnit`) "
@@ -459,10 +461,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Products", "ProductName");
+//			getRequested("Products", "ProductName");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -470,6 +471,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Adds an consultation record to the database with the provided data.
@@ -483,7 +485,7 @@ public class InvoiceData {
 			return;
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO Products (`ProductCode`, `ProductName`, `ConsultantPersonCode`,`ProductType`, `ServiceFee`, `PricePerUnit`) "
@@ -500,10 +502,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Products", "ProductName");
+//			getRequested("Products", "ProductName");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -511,12 +512,13 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Removes all invoice records from the database
 	 */
 	public static void removeAllInvoices() {
-		
+
 		Connection conn = getConn();
 
 		try {
@@ -529,11 +531,11 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			sql = "DELETE FROM Invoice";
+			sql = "DELETE FROM InvoiceProducts";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			sql = "DELETE FROM InvoiceProducts";
+			sql = "DELETE FROM Invoice";
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
@@ -541,8 +543,7 @@ public class InvoiceData {
 			ps = conn.prepareStatement(sql);
 			ps.execute();
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -550,6 +551,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Removes the invoice record from the database corresponding to the
@@ -585,9 +587,7 @@ public class InvoiceData {
 			ps.setString(1, invoiceCode);
 			ps.execute();
 
-			rs.clearWarnings();
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -596,12 +596,12 @@ public class InvoiceData {
 
 	}
 
+
 	/**
 	 * Adds an invoice record to the database with the given data.
 	 */
 	public static void addInvoice(String invoiceCode, String customerCode,
 			String salesPersonCode) {
-		
 
 		// INSERT INTO Invoice (`InvoiceCode`,`CustomerCode`,`SalesPersonCode`)
 		// VALUES ('C001','2345','1278');
@@ -610,7 +610,7 @@ public class InvoiceData {
 				|| invoiceCode == null || customerCode == null
 				|| salesPersonCode == null)
 			return;
-		
+
 		Connection conn = getConn();
 
 		try {
@@ -626,10 +626,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("Invoice", "InvoiceCode");
+//			getRequested("Invoice", "InvoiceCode");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -637,6 +636,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Adds a particular equipment (corresponding to <code>productCode</code> to
@@ -645,13 +645,12 @@ public class InvoiceData {
 	 */
 	public static void addEquipmentToInvoice(String invoiceCode,
 			String productCode, int numUnits) {
-	
 
 		if (invoiceCode == null || productCode == null || numUnits < 0)
 			return;
 
 		try {
-			
+
 			Connection conn = getConn();
 
 			String sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
@@ -667,10 +666,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("InvoiceProducts", "InvoiceID");
+//			getRequested("InvoiceProducts", "InvoiceID");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -678,6 +676,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Adds a particular equipment (corresponding to <code>productCode</code> to
@@ -686,7 +685,6 @@ public class InvoiceData {
 	 */
 	public static void addLicenseToInvoice(String invoiceCode,
 			String productCode, String startDate, String endDate) {
-		
 
 		if (invoiceCode == null || productCode == null || startDate == null
 				|| endDate == null)
@@ -695,7 +693,7 @@ public class InvoiceData {
 		try {
 
 			Connection conn = getConn();
-			
+
 			String sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
 					+ "VALUES ((SELECT InvoiceID FROM Invoice WHERE InvoiceCode = ?),?,?,?,?)";
 
@@ -709,10 +707,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("InvoiceProducts", "InvoiceID");
+//			getRequested("InvoiceProducts", "InvoiceID");
 
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -720,6 +717,7 @@ public class InvoiceData {
 		}
 
 	}
+	
 
 	/**
 	 * Adds a particular equipment (corresponding to <code>productCode</code> to
@@ -728,14 +726,13 @@ public class InvoiceData {
 	 */
 	public static void addConsultationToInvoice(String invoiceCode,
 			String productCode, double numHours) {
-		
 
 		if (invoiceCode == null || productCode == null || numHours < 0)
 			return;
 
 		try {
 			Connection conn = getConn();
-			
+
 			String sql = "INSERT INTO InvoiceProducts (`InvoiceID`,`StartDate`,`EndDate`,`ProductCode`,`ProductCount`) "
 					+ "VALUES ((SELECT InvoiceID FROM Invoice WHERE InvoiceCode = ?),?,?,?,?)";
 
@@ -749,39 +746,9 @@ public class InvoiceData {
 
 			ps.executeUpdate();
 
-			getRequested("InvoiceProducts", "InvoiceID");
+//			getRequested("InvoiceProducts", "InvoiceID");
 
-			ps.close();
-			conn.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	private static void getRequested(String table, String col) {
-
-		Connection conn = getConn();
-		try {
-
-			conn = DriverManager.getConnection(DatabaseInfo.url,
-					DatabaseInfo.username, DatabaseInfo.password);
-
-			String Query = "Select * FROM " + table.trim();
-			PreparedStatement ps = conn.prepareStatement(Query);
-			ResultSet rs = null;
-
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				System.out.println(rs.getString(col));
-			}
-
-			rs.close();
-			ps.close();
-			conn.close();
+			closeConnections(conn, ps, null);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -789,10 +756,35 @@ public class InvoiceData {
 		}
 
 	}
+
+
+//	private static void getRequested(String table, String col) {
+//
+//		Connection conn = getConn();
+//		try {
+//
+//			String Query = "Select * FROM " + table.trim();
+//			PreparedStatement ps = conn.prepareStatement(Query);
+//			ResultSet rs = null;
+//
+//			rs = ps.executeQuery();
+//
+//			while (rs.next()) {
+//				System.out.println(rs.getString(col));
+//			}
+//
+//			closeConnections(conn, ps, rs);
+//
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	private static boolean checkUniqueness(String ident, String table,
 			String col) {
-		
+
 		Connection conn = getConn();
 
 		try {
@@ -814,14 +806,16 @@ public class InvoiceData {
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.out.println("SQLException: ");
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		return true;
 	}
-	
-	private static Connection getConn(){
-		
+
+	private static Connection getConn() {
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (InstantiationException e) {
@@ -837,17 +831,41 @@ public class InvoiceData {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
+
 		Connection conn = null;
 
 		try {
-			conn = DriverManager.getConnection(DatabaseInfo.url, DatabaseInfo.username, DatabaseInfo.password);
+			conn = DriverManager.getConnection(DatabaseInfo.url,
+					DatabaseInfo.username, DatabaseInfo.password);
 		} catch (SQLException e) {
 			System.out.println("SQLException: ");
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
+
 		return conn;
+	}
+
+	/**
+	 * Close all existing connections to the database.
+	 * 
+	 * @param conn
+	 * @param ps
+	 * @param rs
+	 */
+	public static void closeConnections(Connection conn, PreparedStatement ps,
+			ResultSet rs) {
+		try {
+			if (rs != null && !rs.isClosed())
+				rs.close();
+			if (ps != null && !ps.isClosed())
+				ps.close();
+			if (conn != null && !conn.isClosed())
+				conn.close();
+		} catch (SQLException e) {
+			System.out.println("SQLException: ");
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 }
