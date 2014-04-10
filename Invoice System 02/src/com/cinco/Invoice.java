@@ -120,6 +120,9 @@ public class Invoice {
 			consumer.setPrimaryContact(temp);
 		}
 
+		if(salesPerson == null){
+			salesPerson = new People(true);
+		}
 		
 		System.out.println("Invoice " + this.invoiceCode);
 		System.out.println("==============");
