@@ -3,7 +3,7 @@ package com.cinco;
 import java.util.ArrayList;
 
 
-public class Consultions{
+public class Consultions {
 
 	private String consultPersonCode;
 	private People consult;
