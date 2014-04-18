@@ -23,10 +23,12 @@ public class Model {
 	private ArrayList<People> peopleData;
 	private ArrayList<Consumer> consumerData;
 	private ArrayList<Products> productData;
-	private ArrayList<Invoice> invoiceData;
+	private ArrayADT invoiceData;
+	private ArrayADT invoiceData1;
+	private ArrayADT invoiceData2;
 
 	protected void setPeopleData(String location) throws IOException {
-		peopleData = new ArrayList<People>();
+		peopleData = new ArrayList<People>(0);
 		ArrayList<String> temp = getFile(location);
 		for (int i = 0; i < temp.size(); i++) {
 			people = new People(temp.get(i));
@@ -36,7 +38,7 @@ public class Model {
 	}
 
 	protected void setConsumerData(String location) throws IOException {
-		consumerData = new ArrayList<Consumer>();
+		consumerData = new ArrayList<Consumer>(0);
 		ArrayList<String> temp = getFile(location);
 		for (int i = 0; i < temp.size(); i++) {
 			temp.get(i).trim();
@@ -48,19 +50,23 @@ public class Model {
 	}
 
 	protected void setProductData(String location) throws IOException {
-		productData = new ArrayList<Products>();
+		productData = new ArrayList<Products>(0);
 		ArrayList<String> temp = getFile(location);
 		for (int i = 0; i < temp.size(); i++) {
 			temp.get(i).trim();
 			product = new Products(temp.get(i));
 			product.setConsult(peopleData);
 			productData.add(product);
+			// System.out.println(product.toString());
 		}
 	}
 
 	protected void setInvoiceData(String location) throws IOException {
-		invoiceData = new ArrayList<Invoice>();
-
+		invoiceData = new ArrayADT(0);
+		invoiceData1 = new ArrayADT(1);
+		invoiceData2 = new ArrayADT(2);
+		
+		
 		ArrayList<String> temp = getFile(location);
 
 		for (int i = 0; i < temp.size(); i++) {
@@ -73,8 +79,16 @@ public class Model {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			invoiceData.add(invoice);
+			if(invoice != null){
+				//invoice.setInvoice();
+				invoiceData.add(invoice);
+				invoiceData1.add(invoice);
+				invoiceData2.add(invoice);
+				
+			}
+				
+			
+			
 		}
 
 	}
@@ -89,55 +103,79 @@ public class Model {
 			return getProductsSQL();
 		else if (location.compareTo("data/Invoices.dat") == 0)
 			return getInvoiceSQL();
-		
-		else 
+
+		else
 			return null;
 
 	}
 
 	protected void printInvoice() {
+
+
 		
-		
-		System.out.println(invoiceData.size());
-		for (Invoice i : invoiceData) {
-			i.printInvoice();
-			System.out.println();
-			System.out.println();
+		for (int i = 0; i < invoiceData.size(); i++) {
+			
+				invoiceData.get(i).printInvoice();
+				System.out.println();
+				System.out.println();
+			
 		}
+
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+
+		printExecutive(invoiceData, "Alpha");
 		
 		System.out.println();
 		System.out.println();
 		System.out.println();
 		System.out.println();
 
+		printExecutive(invoiceData1, "Total, High-Low");
+		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+
+		printExecutive(invoiceData2, "Private-Public-Sector / Alpha");
+
+	}
+	
+	protected void printExecutive(ArrayADT input, String sortType){
+		
 		Double total = 0.0, subTotal = 0.0, fees = 0.0, taxes = 0.0;
 
 		System.out.println(String
-				.format("Executive Sumary Report \n========================="));
+				.format("Executive Sumary Report ----- %s \n=============================================================", sortType));
 
 		System.out.println(String
 				.format("%-10s %-40s %-40s %-15s %-15s %-20s  $%-15s",
 						"Invoice", "Customer", "Salesperson", "Subtotal",
 						"Fees", "Taxes", "Total"));
 
-		for (Invoice i : invoiceData) {
+		for (int q = 0; invoiceData.get(q) != null && q < invoiceData.size(); q++) {
 
 			System.out.println(String.format(
 					"%-10s %-40s %-40s $%-15.2f $%-15.2f $%-15.2f  $%-15.2f",
-					i.getInvoiceCode(), i.getConsumerName(),
-					i.getSalesPersonName(), i.getSubtotal(),
-					i.getComplianceFees(), i.getTaxes(), i.getGrandTotal()));
-			total += i.getGrandTotal();
-			subTotal += i.getSubtotal();
-			fees += i.getFees();
-			taxes += i.getTaxes();
+					input.get(q).getInvoiceCode(), input.get(q).getConsumerName(),
+					input.get(q).getSalesPersonName(), input.get(q).getSubtotal(),
+					(input.get(q).getComplianceFees() + input.get(q).getFees()), input.get(q).getTaxes(), input.get(q).getGrandTotal()));
+			
+			
+			total += input.get(q).getGrandTotal();
+			subTotal += input.get(q).getSubtotal();
+			fees += input.get(q).getFees();
+			taxes += input.get(q).getTaxes();
+
 		}
 		System.out
 				.println("============================================================================================================================================================");
 		System.out.println(String.format(
 				"%-92s $%-15.2f $%-15.2f $%-15.2f  $%-15.2f", "Totals",
 				subTotal, fees, taxes, total));
-
 	}
 
 	protected void fileToSQL(String location) {
@@ -167,25 +205,24 @@ public class Model {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		for(int i = 0; i < file.size(); i++){
-			if (location.compareTo("data/Persons.dat") == 0){
-				
+
+		for (int i = 0; i < file.size(); i++) {
+			if (location.compareTo("data/Persons.dat") == 0) {
+
+			} else if (location.compareTo("data/Customers.dat") == 0) {
+
 			}
-			else if (location.compareTo("data/Customers.dat") == 0){
-				
+
+			else if (location.compareTo("data/Products.dat") == 0) {
+
 			}
-				
-			else if (location.compareTo("data/Products.dat") == 0){
-				
+
+			else if (location.compareTo("data/Invoices.dat") == 0) {
+
 			}
-				
-			else if (location.compareTo("data/Invoices.dat") == 0){
-				
-			}
-				
+
 		}
-		
+
 	}
 
 	private ArrayList<String> getPersonSQL() {
@@ -254,7 +291,8 @@ public class Model {
 				StringBuilder sb = new StringBuilder();
 
 				sb.append(rs.getString("CustomerCode") + ";");
-				sb.append(rs.getString("IsGov") + ";");
+				//if(rs.getString("IsGov").compareToIgnoreCase("false") == 0)
+					sb.append(rs.getString("IsGov") + ";");
 				sb.append(rs.getString("PrimaryContactCode") + ";");
 				sb.append(rs.getString("CompanyName") + ";");
 				sb.append(rs.getString("Street") + ",");
@@ -265,7 +303,7 @@ public class Model {
 
 				file.add(sb.toString());
 			}
-			
+
 			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
@@ -304,7 +342,7 @@ public class Model {
 						.compareToIgnoreCase("0") == 0) {
 					sb.append("C;");
 					sb.append(rs.getString("ProductName") + ";");
-					sb.append(rs.getString("ConsultantPersonCode")+ ";");
+					sb.append(rs.getString("ConsultantPersonCode") + ";");
 					sb.append(rs.getString("ServiceFee"));
 
 				} else if (rs.getString("ServiceFee").compareToIgnoreCase("0") != 0
@@ -321,7 +359,7 @@ public class Model {
 
 				file.add(sb.toString());
 			}
-			
+
 			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
@@ -354,7 +392,6 @@ public class Model {
 				sb.append(rs.getString("CustomerCode") + ";");
 				sb.append(rs.getString("SalesPersonCode") + ";");
 
-
 				ResultSet products = null;
 
 				sql = "SELECT StartDate, EndDate, ProductCode, ProductCount FROM InvoiceProducts JOIN Invoice ON Invoice.InvoiceID = InvoiceProducts.InvoiceID WHERE InvoiceCode = ?;";
@@ -367,43 +404,42 @@ public class Model {
 
 				while (products.next()) {
 
-					if (products.getString("StartDate").compareToIgnoreCase("0") != 0
-							&& products.getString("StartDate").compareToIgnoreCase(
-									"0") != 0) {
+					if (products.getString("StartDate")
+							.compareToIgnoreCase("0") != 0
+							&& products.getString("StartDate")
+									.compareToIgnoreCase("0") != 0) {
 
 						sb.append(products.getString("ProductCode") + ":");
 						sb.append(products.getString("StartDate") + ":");
 						sb.append(products.getString("EndDate") + ",");
 
-					}
-					else if (products.getString("StartDate").compareToIgnoreCase("0") == 0 && products.getString("StartDate").compareToIgnoreCase("0") == 0){
-						
+					} else if (products.getString("StartDate")
+							.compareToIgnoreCase("0") == 0
+							&& products.getString("StartDate")
+									.compareToIgnoreCase("0") == 0) {
+
 						sb.append(products.getString("ProductCode") + ":");
 						sb.append(products.getString("ProductCount") + ",");
-						
+
 					}
-				
 
 				}
 
 				products.close();
-				sb.replace(sb.length()-1, sb.length(), "");
-				
+				sb.replace(sb.length() - 1, sb.length(), "");
+
 				file.add(sb.toString());
-				
-				
-//				System.out.println(sb.toString());
+
+				// System.out.println(sb.toString());
 
 			}
-			
+
 			InvoiceData.closeConnections(conn, ps, rs);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		
-		
 		return file;
 
 	}
