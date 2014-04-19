@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="/Users/Michael/Desktop/Programming/External Jar/joda-time-2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/Michael/Desktop/Programming/External Jar/xstream-distribution-1.4.7-src.zip"/>
+	<classpathentry kind="lib" path="/Users/Michael/Desktop/Programming/External Jar/jboss-common-jdbc-wrapper-src.jar"/>
+	<classpathentry kind="lib" path="/Users/Michael/Desktop/Programming/External Jar/mysql-connector-java-5.1.30-bin.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 7 [1.7.0_51]">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+=======
 	<classpathentry kind="lib" path="/tmp/xstream-distribution-1.4.7-src.zip"/>
 	<classpathentry kind="lib" path="/home/michael/downloads/joda-time-2.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-openjdk-i386"/>
+>>>>>>> branch 'master' of https://github.com/MichaelFay/Invoice-System.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>

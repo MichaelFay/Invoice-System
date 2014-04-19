@@ -1,10 +1,12 @@
+package com.cinco;
 import java.io.IOException;
+import java.sql.SQLException;
 
 
 public class Main {
 
-	public static void main(String args[]) throws IOException{
-		//Hello WOrld
+	public static void main(String args[]) throws IOException, SQLException{
+		
 		
 		
 		final String location[] = new String[4];
@@ -17,6 +19,6 @@ public class Main {
 		
 		control.Start();
 		
-		//System.out.println("End of Program");
+		//System.out.println("\n\n\n\n\n End of Program");
 	}
 }

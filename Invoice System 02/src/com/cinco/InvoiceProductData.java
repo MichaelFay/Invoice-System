@@ -1,11 +1,10 @@
+package com.cinco;
 
 public class InvoiceProductData {
 
 	private String startDate, endDate, type, name, productCode;
 	private Double fees, price, complianceFee, totalCharge;
 	private Integer amount;
-	
-	private People person;
 	
 	public InvoiceProductData(String startDate, String endDate, Integer amount, Products product){
 		this.startDate = startDate;

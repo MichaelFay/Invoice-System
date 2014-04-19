@@ -1,3 +1,4 @@
+package com.cinco;
 
 public class Equipment {
 
